@@ -13,6 +13,7 @@ class App extends Component {
     images: [],
     searchQuery: "",
     page: 0,
+    totalImages: 0,
     isLoading: false,
     showModal: false,
     imgData: { src: "", alt: "" },
@@ -43,9 +44,10 @@ class App extends Component {
     this.setState({ isLoading: true });
 
     ApiService.searchRequest(searchQuery, page)
-      .then((images) =>
+      .then(({ hits, totalHits }) =>
         this.setState((prevState) => ({
-          images: [...prevState.images, ...images],
+          images: [...prevState.images, ...hits],
+          totalImages: totalHits,
           page: prevState.page + 1,
         }))
       )
@@ -69,7 +71,10 @@ class App extends Component {
   };
 
   render() {
-    const { images, isLoading, showModal, imgData } = this.state;
+    const { images, totalImages, isLoading, showModal, imgData } = this.state;
+
+    const actButton =
+      images.length > 0 && !isLoading && images.length < totalImages;
 
     return (
       <>
@@ -77,7 +82,7 @@ class App extends Component {
 
         <ImageGallery images={this.state.images} onClick={this.toggleModal} />
         {isLoading && <Spinner />}
-        {images.length > 0 && !isLoading && (
+        {actButton && (
           <Button
             title="Load more"
             className="Button"

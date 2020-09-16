@@ -1,14 +1,21 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 class Modal extends Component {
+  static propTypes = {
+    imgData: PropTypes.shape({
+      src: PropTypes.string.isRequired,
+      alt: PropTypes.string.isRequired,
+    }),
+    onClose: PropTypes.func.isRequired,
+  };
+
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown);
-    // window.addEventListener("click", this.handleClick);
   }
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown);
-    // window.addEventListener("click", this.handleClick);
   }
 
   handleKeyDown = (e) => {
